@@ -46,21 +46,21 @@ export const Dashboard = () => {
       title: 'Nova Venda',
       description: 'Registrar uma nova venda',
       icon: ShoppingCart,
-      action: () => navigate('/sales/new'),
+      action: () => navigate('/sales'),
       variant: 'paint' as const
     },
     {
       title: 'Novo Produto',
       description: 'Cadastrar produto no estoque',
       icon: Package,
-      action: () => navigate('/products/new'),
+      action: () => navigate('/products'),
       variant: 'success' as const
     },
     {
       title: 'Novo Serviço',
       description: 'Agendar serviço de pintura',
       icon: Wrench,
-      action: () => navigate('/services/new'),
+      action: () => navigate('/services'),
       variant: 'secondary' as const
     }
   ];

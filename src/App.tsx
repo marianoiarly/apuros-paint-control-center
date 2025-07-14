@@ -10,6 +10,8 @@ import { isAuthenticated } from './lib/auth';
 import DashboardPage from './pages/DashboardPage';
 import ProductsPage from './pages/ProductsPage';
 import InventoryPage from './pages/InventoryPage';
+import SalesPage from './pages/SalesPage';
+import ServicesPage from './pages/ServicesPage';
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -48,11 +50,11 @@ const App = () => {
                 <Route path="/dashboard" element={<DashboardPage />} />
                 <Route path="/products" element={<ProductsPage />} />
                 <Route path="/inventory" element={<InventoryPage />} />
-                <Route path="/sales" element={<div>Vendas - Em desenvolvimento</div>} />
-                <Route path="/services" element={<div>Serviços - Em desenvolvimento</div>} />
-                <Route path="/reports" element={<div>Relatórios - Em desenvolvimento</div>} />
-                <Route path="/history" element={<div>Histórico - Em desenvolvimento</div>} />
-                <Route path="/users" element={<div>Usuários - Em desenvolvimento</div>} />
+                <Route path="/sales" element={<SalesPage />} />
+                <Route path="/services" element={<ServicesPage />} />
+                <Route path="/reports" element={<div className="text-center py-12 text-muted-foreground">Relatórios - Em desenvolvimento</div>} />
+                <Route path="/history" element={<div className="text-center py-12 text-muted-foreground">Histórico - Em desenvolvimento</div>} />
+                <Route path="/users" element={<div className="text-center py-12 text-muted-foreground">Usuários - Em desenvolvimento</div>} />
                 <Route path="*" element={<NotFound />} />
               </Routes>
             </AppLayout>
