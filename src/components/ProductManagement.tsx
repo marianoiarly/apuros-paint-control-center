@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { Plus, Search, Package, Edit, Trash2, AlertTriangle } from 'lucide-react';
+import { Plus, Search, Package, Edit, Trash2, AlertTriangle, ShoppingCart } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,20 +12,38 @@ import {
   TableHeader, 
   TableRow 
 } from '@/components/ui/table';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { getProducts, Product } from '@/lib/database';
+import { ProductForm } from './ProductForm';
+import { SaleForm } from './SaleForm';
+import { useToast } from '@/hooks/use-toast';
 
 export const ProductManagement = () => {
   const [products, setProducts] = useState<Product[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
+  const [showProductForm, setShowProductForm] = useState(false);
+  const [showSaleForm, setShowSaleForm] = useState(false);
+  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
+  const [deletingProduct, setDeletingProduct] = useState<Product | null>(null);
+  const { toast } = useToast();
+
+  const loadProducts = () => {
+    const allProducts = getProducts();
+    setProducts(allProducts);
+    setFilteredProducts(allProducts);
+  };
 
   useEffect(() => {
-    const loadProducts = () => {
-      const allProducts = getProducts();
-      setProducts(allProducts);
-      setFilteredProducts(allProducts);
-    };
-    
     loadProducts();
   }, []);
 
@@ -38,6 +56,40 @@ export const ProductManagement = () => {
     );
     setFilteredProducts(filtered);
   }, [searchTerm, products]);
+
+  const handleEdit = (product: Product) => {
+    setEditingProduct(product);
+    setShowProductForm(true);
+  };
+
+  const handleDelete = (product: Product) => {
+    setDeletingProduct(product);
+  };
+
+  const confirmDelete = () => {
+    if (!deletingProduct) return;
+    
+    const updatedProducts = products.filter(p => p.id !== deletingProduct.id);
+    localStorage.setItem('apuros_products', JSON.stringify(updatedProducts));
+    
+    toast({
+      title: "Produto excluído",
+      description: `${deletingProduct.name} foi removido do sistema`,
+    });
+    
+    loadProducts();
+    setDeletingProduct(null);
+  };
+
+  const handleFormSuccess = () => {
+    loadProducts();
+    setEditingProduct(null);
+  };
+
+  const handleNewProduct = () => {
+    setEditingProduct(null);
+    setShowProductForm(true);
+  };
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('pt-BR', {
@@ -66,10 +118,16 @@ export const ProductManagement = () => {
             Gerencie o catálogo de produtos da sua loja
           </p>
         </div>
-        <Button variant="hero" size="lg" className="gap-2">
-          <Plus className="h-4 w-4" />
-          Novo Produto
-        </Button>
+        <div className="flex gap-2">
+          <Button variant="hero" size="lg" className="gap-2" onClick={handleNewProduct}>
+            <Plus className="h-4 w-4" />
+            Novo Produto
+          </Button>
+          <Button variant="paint" size="lg" className="gap-2" onClick={() => setShowSaleForm(true)}>
+            <ShoppingCart className="h-4 w-4" />
+            Nova Venda
+          </Button>
+        </div>
       </div>
 
       {/* Summary Cards */}
@@ -197,10 +255,19 @@ export const ProductManagement = () => {
                       </TableCell>
                       <TableCell className="text-right">
                         <div className="flex items-center justify-end gap-2">
-                          <Button variant="ghost" size="icon">
+                          <Button 
+                            variant="ghost" 
+                            size="icon"
+                            onClick={() => handleEdit(product)}
+                          >
                             <Edit className="h-4 w-4" />
                           </Button>
-                          <Button variant="ghost" size="icon" className="text-destructive hover:text-destructive">
+                          <Button 
+                            variant="ghost" 
+                            size="icon" 
+                            className="text-destructive hover:text-destructive"
+                            onClick={() => handleDelete(product)}
+                          >
                             <Trash2 className="h-4 w-4" />
                           </Button>
                         </div>
@@ -222,6 +289,45 @@ export const ProductManagement = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Product Form Dialog */}
+      <ProductForm
+        open={showProductForm}
+        onOpenChange={setShowProductForm}
+        product={editingProduct}
+        onSuccess={handleFormSuccess}
+      />
+
+      {/* Sale Form Dialog */}
+      <SaleForm
+        open={showSaleForm}
+        onOpenChange={setShowSaleForm}
+        onSuccess={() => {
+          toast({
+            title: "Venda realizada!",
+            description: "Venda registrada com sucesso",
+          });
+        }}
+      />
+
+      {/* Delete Confirmation Dialog */}
+      <AlertDialog open={!!deletingProduct} onOpenChange={() => setDeletingProduct(null)}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Excluir Produto</AlertDialogTitle>
+            <AlertDialogDescription>
+              Tem certeza que deseja excluir o produto "{deletingProduct?.name}"? 
+              Esta ação não pode ser desfeita.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Cancelar</AlertDialogCancel>
+            <AlertDialogAction onClick={confirmDelete} className="bg-destructive text-destructive-foreground hover:bg-destructive/90">
+              Excluir
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

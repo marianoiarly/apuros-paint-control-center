@@ -12,6 +12,9 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Button } from '@/components/ui/button';
 import { getDashboardStats, getProducts } from '@/lib/database';
 import { useNavigate } from 'react-router-dom';
+import { ProductForm } from './ProductForm';
+import { SaleForm } from './SaleForm';
+import { useToast } from '@/hooks/use-toast';
 
 interface DashboardStats {
   dailySales: number;
@@ -27,11 +30,18 @@ export const Dashboard = () => {
     lowStockCount: 0,
     totalProducts: 0
   });
+  const [showProductForm, setShowProductForm] = useState(false);
+  const [showSaleForm, setShowSaleForm] = useState(false);
   const navigate = useNavigate();
+  const { toast } = useToast();
 
   useEffect(() => {
-    const dashboardStats = getDashboardStats();
-    setStats(dashboardStats);
+    const loadStats = () => {
+      const dashboardStats = getDashboardStats();
+      setStats(dashboardStats);
+    };
+    
+    loadStats();
   }, []);
 
   const formatCurrency = (value: number) => {
@@ -41,26 +51,31 @@ export const Dashboard = () => {
     }).format(value);
   };
 
+  const refreshStats = () => {
+    const dashboardStats = getDashboardStats();
+    setStats(dashboardStats);
+  };
+
   const quickActions = [
     {
       title: 'Nova Venda',
       description: 'Registrar uma nova venda',
       icon: ShoppingCart,
-      action: () => navigate('/sales'),
+      action: () => setShowSaleForm(true),
       variant: 'paint' as const
     },
     {
       title: 'Novo Produto',
       description: 'Cadastrar produto no estoque',
       icon: Package,
-      action: () => navigate('/products'),
+      action: () => setShowProductForm(true),
       variant: 'success' as const
     },
     {
-      title: 'Novo Serviço',
-      description: 'Agendar serviço de pintura',
-      icon: Wrench,
-      action: () => navigate('/services'),
+      title: 'Ver Produtos',
+      description: 'Gerenciar catálogo de produtos',
+      icon: Eye,
+      action: () => navigate('/products'),
       variant: 'secondary' as const
     }
   ];
@@ -241,6 +256,33 @@ export const Dashboard = () => {
           </div>
         </CardContent>
       </Card>
+
+      {/* Product Form Dialog */}
+      <ProductForm
+        open={showProductForm}
+        onOpenChange={setShowProductForm}
+        product={null}
+        onSuccess={() => {
+          refreshStats();
+          toast({
+            title: "Produto cadastrado!",
+            description: "Produto adicionado com sucesso ao catálogo",
+          });
+        }}
+      />
+
+      {/* Sale Form Dialog */}
+      <SaleForm
+        open={showSaleForm}
+        onOpenChange={setShowSaleForm}
+        onSuccess={() => {
+          refreshStats();
+          toast({
+            title: "Venda realizada!",
+            description: "Venda registrada com sucesso",
+          });
+        }}
+      />
     </div>
   );
 };
