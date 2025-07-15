@@ -189,6 +189,25 @@ export const saveSale = (sale: Sale): void => {
 };
 
 // Analytics
+export const getDatabase = () => {
+  const db = {
+    products: JSON.parse(localStorage.getItem('apuros_products') || JSON.stringify(MOCK_PRODUCTS)),
+    services: JSON.parse(localStorage.getItem('apuros_services') || JSON.stringify(MOCK_SERVICES)),
+    sales: JSON.parse(localStorage.getItem('apuros_sales') || JSON.stringify(MOCK_SALES)),
+    users: JSON.parse(localStorage.getItem('apuros_users') || '[]'),
+    stockMovements: JSON.parse(localStorage.getItem('apuros_stock_movements') || '[]')
+  };
+  return db;
+};
+
+export const saveDatabase = (db: any) => {
+  localStorage.setItem('apuros_products', JSON.stringify(db.products || []));
+  localStorage.setItem('apuros_services', JSON.stringify(db.services || []));
+  localStorage.setItem('apuros_sales', JSON.stringify(db.sales || []));
+  localStorage.setItem('apuros_users', JSON.stringify(db.users || []));
+  localStorage.setItem('apuros_stock_movements', JSON.stringify(db.stockMovements || []));
+};
+
 export const getDashboardStats = () => {
   const products = getProducts();
   const services = getServices();
