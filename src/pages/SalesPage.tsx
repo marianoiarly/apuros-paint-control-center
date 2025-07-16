@@ -24,7 +24,7 @@ const SalesPage = () => {
   };
 
   const filteredSales = sales.filter(sale => {
-    const matchesSearch = sale.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch = (sale.customer || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                          sale.id.toString().includes(searchTerm);
     const matchesStatus = statusFilter === 'all' || sale.status === statusFilter;
     return matchesSearch && matchesStatus;
