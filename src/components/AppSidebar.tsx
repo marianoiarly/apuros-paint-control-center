@@ -57,8 +57,8 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
   const isActive = (path: string) => currentPath === path;
   const getNavCls = ({ isActive }: { isActive: boolean }) =>
     isActive 
-      ? "bg-primary text-primary-foreground font-medium" 
-      : "hover:bg-accent hover:text-accent-foreground";
+      ? "bg-primary text-black font-medium" 
+      : "text-black hover:bg-accent hover:text-black";
 
   const handleLogout = () => {
     logout();
@@ -87,7 +87,7 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
       <SidebarContent>
         {/* Main Navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel>Principal</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-black">Principal</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {mainItems.map((item) => (
@@ -106,7 +106,7 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
 
         {/* Reports */}
         <SidebarGroup>
-          <SidebarGroupLabel>Relatórios</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-black">Relatórios</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {reportsItems.map((item) => (
@@ -125,7 +125,7 @@ export function AppSidebar({ onLogout }: AppSidebarProps) {
 
         {/* System */}
         <SidebarGroup>
-          <SidebarGroupLabel>Sistema</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-black">Sistema</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {systemItems.map((item) => (
