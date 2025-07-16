@@ -40,7 +40,7 @@ const ServicesPage = () => {
     const newService = {
       id: Date.now(),
       ...formData,
-      price: parseFloat(formData.price),
+      price: parseFloat(formData.price) || 0,
       createdAt: new Date().toISOString()
     };
 
@@ -239,7 +239,7 @@ const ServicesPage = () => {
                     </div>
                     <div className="text-right">
                       <p className="text-xl font-bold text-black dark:text-white">
-                        R$ {service.price.toFixed(2)}
+                        R$ {(service.price || 0).toFixed(2)}
                       </p>
                     </div>
                   </div>
