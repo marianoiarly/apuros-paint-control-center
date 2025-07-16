@@ -238,24 +238,6 @@ export const Dashboard = () => {
         </Card>
       </div>
 
-      {/* Sales Chart Placeholder */}
-      <Card className="paint-card">
-        <CardHeader>
-          <CardTitle>Vendas da Semana</CardTitle>
-          <CardDescription>
-            Acompanhe o desempenho das vendas nos últimos 7 dias
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <div className="h-[300px] flex items-center justify-center bg-muted/30 rounded-lg">
-            <div className="text-center">
-              <TrendingUp className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">Gráfico de vendas será implementado</p>
-              <p className="text-sm text-muted-foreground">com bibliotecas de gráficos</p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
 
       {/* Product Form Dialog */}
       <ProductForm

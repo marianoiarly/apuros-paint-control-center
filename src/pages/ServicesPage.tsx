@@ -86,6 +86,21 @@ const ServicesPage = () => {
     return texts[status as keyof typeof texts] || status;
   };
 
+  const updateServiceStatus = (serviceId: number, newStatus: string) => {
+    const db = getDatabase();
+    const updatedServices = db.services.map((service: any) => 
+      service.id === serviceId ? { ...service, status: newStatus } : service
+    );
+    db.services = updatedServices;
+    saveDatabase(db);
+    setServices(updatedServices);
+    
+    toast({
+      title: "Status atualizado!",
+      description: `Serviço marcado como ${getStatusText(newStatus)}`,
+    });
+  };
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -237,10 +252,24 @@ const ServicesPage = () => {
                         )}
                       </div>
                     </div>
-                    <div className="text-right">
+                    <div className="text-right space-y-2">
                       <p className="text-xl font-bold text-black dark:text-white">
                         R$ {(service.price || 0).toFixed(2)}
                       </p>
+                      {service.status === 'scheduled' && (
+                        <Button 
+                          size="sm" 
+                          onClick={() => updateServiceStatus(service.id, 'completed')}
+                          className="bg-green-600 hover:bg-green-700"
+                        >
+                          Marcar como Concluído
+                        </Button>
+                      )}
+                      {service.status === 'completed' && (
+                        <Badge className="bg-green-100 text-green-800">
+                          ✓ Concluído
+                        </Badge>
+                      )}
                     </div>
                   </div>
                 </div>
