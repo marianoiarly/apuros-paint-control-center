@@ -18,7 +18,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { getProducts, saveSale, Sale, SaleItem } from '@/lib/database';
+import { getProducts, saveSale, Sale, SaleItem, getDatabase, saveDatabase } from '@/lib/database';
 import { useToast } from '@/hooks/use-toast';
 
 interface SaleFormProps {
@@ -107,6 +107,15 @@ export const SaleForm = ({ open, onOpenChange, onSuccess }: SaleFormProps) => {
     }
 
     try {
+      // Atualizar estoque dos produtos vendidos
+      const db = getDatabase();
+      items.forEach(item => {
+        const productIndex = db.products.findIndex(p => p.id === item.productId);
+        if (productIndex !== -1) {
+          db.products[productIndex].stock -= item.quantity;
+        }
+      });
+
       const sale: Sale = {
         id: Date.now().toString(),
         client,
@@ -119,6 +128,9 @@ export const SaleForm = ({ open, onOpenChange, onSuccess }: SaleFormProps) => {
       };
 
       saveSale(sale);
+      
+      // Salvar as mudanças do estoque
+      saveDatabase(db);
       
       toast({
         title: "Venda realizada!",

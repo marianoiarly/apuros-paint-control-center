@@ -95,7 +95,7 @@ const InventoryPage = () => {
 
   const getStockStatus = (stock: number, minStock: number = 10) => {
     if (stock === 0) return { status: 'empty', text: 'Sem estoque', color: 'bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-300' };
-    if (stock <= minStock) return { status: 'low', text: 'Estoque baixo', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300' };
+    if (stock < minStock) return { status: 'low', text: 'Estoque baixo', color: 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-300' };
     return { status: 'good', text: 'Estoque OK', color: 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300' };
   };
 
@@ -104,7 +104,7 @@ const InventoryPage = () => {
     product.brand.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const lowStockProducts = products.filter(p => p.stock <= 10);
+  const lowStockProducts = products.filter(p => p.stock < (p.minStock || 10));
   const outOfStockProducts = products.filter(p => p.stock === 0);
 
   return (

@@ -34,7 +34,6 @@ interface AppSidebarProps {
 const mainItems = [
   { title: 'Dashboard', url: '/dashboard', icon: LayoutDashboard },
   { title: 'Produtos', url: '/products', icon: Package },
-  { title: 'Estoque', url: '/inventory', icon: Warehouse },
   { title: 'Vendas', url: '/sales', icon: ShoppingCart },
   { title: 'Serviços', url: '/services', icon: Wrench },
 ];

@@ -265,6 +265,15 @@ const ServicesPage = () => {
                           Marcar como Concluído
                         </Button>
                       )}
+                      {service.status === 'inProgress' && (
+                        <Button 
+                          size="sm" 
+                          onClick={() => updateServiceStatus(service.id, 'completed')}
+                          className="bg-green-600 hover:bg-green-700"
+                        >
+                          Marcar como Concluído
+                        </Button>
+                      )}
                       {service.status === 'completed' && (
                         <Badge className="bg-green-100 text-green-800">
                           ✓ Concluído
