@@ -1,11 +1,12 @@
 import { useState, useEffect } from 'react';
-import { Wrench, Plus, Calendar, Users, Clock, MapPin } from 'lucide-react';
+import { Wrench, Plus, Calendar, Users, Clock, MapPin, MoreVertical } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { getDatabase, saveDatabase } from '@/lib/database';
@@ -256,29 +257,50 @@ const ServicesPage = () => {
                       <p className="text-xl font-bold text-black dark:text-white">
                         R$ {(service.price || 0).toFixed(2)}
                       </p>
-                      {service.status === 'scheduled' && (
-                        <Button 
-                          size="sm" 
-                          onClick={() => updateServiceStatus(service.id, 'completed')}
-                          className="bg-green-600 hover:bg-green-700"
-                        >
-                          Marcar como Concluído
-                        </Button>
-                      )}
-                      {service.status === 'inProgress' && (
-                        <Button 
-                          size="sm" 
-                          onClick={() => updateServiceStatus(service.id, 'completed')}
-                          className="bg-green-600 hover:bg-green-700"
-                        >
-                          Marcar como Concluído
-                        </Button>
-                      )}
-                      {service.status === 'completed' && (
-                        <Badge className="bg-green-100 text-green-800">
-                          ✓ Concluído
-                        </Badge>
-                      )}
+                      
+                      {/* Dropdown de Ações */}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="outline" size="sm">
+                            <MoreVertical className="h-4 w-4" />
+                            Ações
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end" className="w-48">
+                          {service.status !== 'completed' && (
+                            <DropdownMenuItem 
+                              onClick={() => updateServiceStatus(service.id, 'completed')}
+                              className="text-green-600"
+                            >
+                              ✓ Marcar como Concluído
+                            </DropdownMenuItem>
+                          )}
+                          {service.status !== 'cancelled' && (
+                            <DropdownMenuItem 
+                              onClick={() => updateServiceStatus(service.id, 'cancelled')}
+                              className="text-red-600"
+                            >
+                              ✕ Cancelar Serviço
+                            </DropdownMenuItem>
+                          )}
+                          {(service.status === 'completed' || service.status === 'cancelled') && (
+                            <DropdownMenuItem 
+                              onClick={() => updateServiceStatus(service.id, 'scheduled')}
+                              className="text-blue-600"
+                            >
+                              ↻ Remarcar Serviço
+                            </DropdownMenuItem>
+                          )}
+                          {service.status === 'scheduled' && (
+                            <DropdownMenuItem 
+                              onClick={() => updateServiceStatus(service.id, 'inProgress')}
+                              className="text-yellow-600"
+                            >
+                              ⏳ Marcar em Andamento
+                            </DropdownMenuItem>
+                          )}
+                        </DropdownMenuContent>
+                      </DropdownMenu>
                     </div>
                   </div>
                 </div>
