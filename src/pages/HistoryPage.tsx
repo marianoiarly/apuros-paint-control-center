@@ -112,10 +112,6 @@ const HistoryPage = () => {
             Visualize todas as atividades do sistema
           </p>
         </div>
-        <Button className="bg-blue-600 hover:bg-blue-700">
-          <Download className="h-4 w-4 mr-2" />
-          Exportar Histórico
-        </Button>
       </div>
 
       {/* Filtros */}
