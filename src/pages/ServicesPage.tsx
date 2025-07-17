@@ -275,7 +275,7 @@ const ServicesPage = () => {
                               ✓ Marcar como Concluído
                             </DropdownMenuItem>
                           )}
-                          {service.status !== 'cancelled' && (
+                          {service.status !== 'cancelled' && service.status !== 'completed' && (
                             <DropdownMenuItem 
                               onClick={() => updateServiceStatus(service.id, 'cancelled')}
                               className="text-red-600"
@@ -283,7 +283,7 @@ const ServicesPage = () => {
                               ✕ Cancelar Serviço
                             </DropdownMenuItem>
                           )}
-                          {(service.status === 'completed' || service.status === 'cancelled') && (
+                          {service.status === 'cancelled' && (
                             <DropdownMenuItem 
                               onClick={() => updateServiceStatus(service.id, 'scheduled')}
                               className="text-blue-600"

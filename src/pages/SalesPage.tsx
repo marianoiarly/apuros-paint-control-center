@@ -24,7 +24,7 @@ const SalesPage = () => {
   };
 
   const filteredSales = sales.filter(sale => {
-    const matchesSearch = (sale.customer || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
+    const matchesSearch = (sale.client || '').toLowerCase().includes(searchTerm.toLowerCase()) ||
                          sale.id.toString().includes(searchTerm);
     const matchesStatus = statusFilter === 'all' || sale.status === statusFilter;
     return matchesSearch && matchesStatus;
@@ -112,10 +112,10 @@ const SalesPage = () => {
                           {getStatusText(sale.status)}
                         </Badge>
                       </div>
-                      <p className="text-black dark:text-white">Cliente: {sale.customer}</p>
+                      <p className="text-black dark:text-white">Cliente: {sale.client}</p>
                       <p className="text-gray-600 dark:text-gray-400">
                         <Calendar className="h-4 w-4 inline mr-1" />
-                        {new Date(sale.date).toLocaleDateString('pt-BR')}
+                        {new Date(sale.createdAt).toLocaleDateString('pt-BR')}
                       </p>
                     </div>
                     <div className="text-right">
